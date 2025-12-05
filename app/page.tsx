@@ -1,65 +1,71 @@
-import Image from "next/image";
+'use client';
+
+import { Canvas } from '@react-three/fiber';
+import { Stars, ScrollControls, Scroll } from '@react-three/drei';
+import Navbar from '@/components/Navbar';
+import SmartBlob from '@/components/SmartBlob'; // 确保你有这个组件
+import Link from 'next/link';
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <main className="h-screen w-full bg-black">
+      <Canvas className="h-full w-full">
+        <ambientLight intensity={1.5} />
+        <directionalLight position={[10, 10, 5]} intensity={2} color="#ffffff" />
+        <pointLight position={[-10, -10, -5]} intensity={5} color="#8352FD" />
+        
+        <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
+
+        <ScrollControls pages={2} damping={0.2}>
+          
+          {/* Layer 1: 3D 智能球 */}
+          <SmartBlob />
+
+          {/* Layer 2: 滚动内容 */}
+          <Scroll html style={{ width: '100%' }}>
+            
+            <Navbar />
+
+            {/* 第一屏：标题 */}
+            <div className="h-screen w-full flex items-center justify-center pointer-events-none">
+              <div className="text-center mix-blend-difference">
+                <h1 className="text-8xl font-black text-white mb-2 tracking-tighter">
+                  CYBER BLOG
+                </h1>
+                <p className="text-xl text-gray-400 tracking-widest uppercase">
+                  Design / Code / Future
+                </p>
+                <div className="mt-20 animate-bounce text-white/50 text-sm">
+                   ↓ SCROLL TO MUTATE
+                </div>
+              </div>
+            </div>
+
+            {/* 第二屏：文章列表 */}
+            <div className="h-screen w-full flex items-center px-20">
+              <div className="w-1/2">
+                <h2 className="text-5xl text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-blue-500 font-bold mb-8">
+                  System Mutation Complete.
+                </h2>
+                <div className="space-y-8">
+                  {[1, 2, 3].map((i) => (
+                    <Link key={i} href={`/articles/${i}`} className="block group cursor-pointer">
+                      <h3 className="text-2xl text-white font-bold group-hover:text-teal-400 transition-colors">
+                        0{i}. Neural Network Visualization &rarr;
+                      </h3>
+                      <p className="text-gray-500 mt-2">
+                        Deep dive into WebGL shaders and reactive state management...
+                      </p>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+          </Scroll>
+        </ScrollControls>
+
+      </Canvas>
+    </main>
   );
 }
